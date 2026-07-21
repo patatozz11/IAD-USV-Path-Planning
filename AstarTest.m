@@ -2,51 +2,81 @@ clear all;
 clc; 
 
 %% -------------------- 1) Map --------------------
-gridMap = [
-        0 0 0 0 0 0 0 0 1 1 1 0 0 0 0 0 0 1 1 0;
-        0 1 1 0 0 0 0 0 1 1 1 0 0 1 0 0 0 1 1 0;
-        0 1 1 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0;
-        0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0;
-        0 0 0 0 0 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0;
-        0 0 0 0 0 1 1 0 0 0 1 1 0 0 0 0 0 0 0 0;
-        0 1 1 1 0 0 0 0 0 0 1 1 0 0 0 1 1 0 0 0;
-        0 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0;
-        0 0 0 0 0 0 0 1 1 0 0 0 0 1 1 0 0 0 0 0;
-        0 1 1 0 0 0 0 1 1 0 0 0 0 0 0 0 0 0 0 0;
-        0 0 0 0 0 0 0 1 1 0 0 0 1 0 0 0 0 0 0 0;
-        0 0 0 0 0 0 0 0 0 0 0 0 1 0 1 1 0 0 0 0;
-        0 1 1 0 0 0 0 0 0 0 0 0 0 0 1 1 0 0 0 0;
-        0 1 1 0 0 0 1 1 1 0 0 0 0 0 0 0 0 0 0 0;
-        0 0 0 0 0 0 1 1 1 0 0 1 1 1 1 0 0 0 0 0;
-        0 0 0 0 0 0 0 0 0 0 0 1 1 1 1 0 0 0 0 0;
-        0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0;
-        0 0 0 0 0 1 1 1 0 0 0 1 1 0 0 0 0 0 0 0;
-        0 0 0 0 0 1 1 0 0 0 0 1 1 0 0 0 0 0 0 0;
-        0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 1 1 0 0 0
-    ];
+%  U型障碍
+% gridMap = [
+% 0 0 0 0 0 0 0 0 0 ;
+% 0 0 0 0 0 0 0 0 0 ;
+% 0 0 1 0 0 0 1 0 0 ;
+% 0 0 1 0 0 0 1 0 0 ;
+% 0 0 1 0 0 0 1 0 0 ;
+% 0 0 1 0 0 0 1 0 0 ;
+% 0 0 1 1 1 1 1 0 0 ;
+% 0 0 0 0 0 0 0 0 0 ; 
+% 0 0 0 0 0 0 0 0 0 
+% ];
+
+%高度受限的狭窄通道
+
 
 % gridMap = [
-%         0 1 0 0 1 0 0 1 1 0 1 0 1 0 0 0 0 0 0 0;
-%         0 1 1 0 0 1 0 0 0 0 0 0 1 1 0 1 1 0 0 0;
-%         0 1 0 0 0 0 0 1 0 0 1 0 0 0 0 0 0 0 0 0;
-%         0 0 0 0 0 1 1 0 0 0 0 0 0 1 1 0 0 0 1 0;
-%         1 1 0 0 0 0 0 1 1 0 0 1 1 1 0 1 0 0 0 0;
-%         0 1 0 0 0 1 1 0 0 0 1 0 0 0 0 0 0 1 0 0;
-%         0 0 0 0 0 1 0 0 1 0 1 1 0 0 0 0 0 0 0 1;
-%         0 0 1 0 0 0 0 0 0 1 1 0 0 0 1 0 0 1 0 0;
-%         0 0 0 0 0 0 1 0 0 1 0 0 1 0 0 0 0 0 0 0;
-%         0 0 0 0 0 0 0 0 1 0 0 1 0 1 0 0 0 0 0 0;
-%         1 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0;
-%         0 1 0 1 0 0 0 0 1 0 1 0 0 1 1 0 0 0 0 0;
-%         0 0 0 0 0 1 0 0 0 0 0 1 0 1 0 0 0 1 0 0;
-%         0 0 1 1 0 1 0 1 0 0 0 0 0 0 0 0 0 0 0 0;
-%         0 0 1 0 0 0 0 0 1 0 0 1 0 0 1 0 0 0 0 0;
-%         0 0 0 0 1 1 0 0 0 1 0 0 0 0 0 0 0 0 0 0;
-%         0 0 0 0 1 0 0 0 0 0 0 1 0 0 1 0 0 0 0 0;
-%         0 0 0 0 0 0 0 1 1 0 0 0 0 0 0 1 0 0 0 0;
-%         0 1 0 0 0 1 0 0 0 1 1 0 0 0 0 0 0 0 0 0;
-%         0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
-%     ];
+% 0 0 0 0 0 0 0 0 0;
+% 0 0 0 0 0 0 0 0 0;
+% 0 1 1 1 1 1 1 0 0;
+% 0 1 0 0 0 0 0 0 0;
+% 0 1 0 1 1 1 1 0 0;
+% 0 1 0 0 0 1 1 0 0;
+% 0 1 1 1 1 0 0 0 0;
+% 0 0 0 0 0 0 0 0 0;
+% 0 0 0 0 0 0 0 0 0
+% ];
+
+
+
+
+gridMap = [
+        1 1 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0 1 1 0;
+        1 1 1 1 1 1 1 1 0 0 0 0 0 1 0 0 0 1 1 0;
+        1 1 1 1 1 1 1 0 0 0 0 0 0 1 0 0 0 0 0 0;
+        1 1 1 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0;
+        1 1 1 1 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0;
+        1 1 1 1 0 1 1 0 0 0 1 1 0 0 0 0 0 0 0 0;
+        1 1 1 0 0 0 0 0 0 0 1 1 0 0 0 1 1 0 0 0;
+        1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0;
+        1 0 0 0 0 0 0 1 1 0 0 0 0 1 1 0 0 0 0 0;
+        0 1 1 0 0 0 0 1 1 0 0 0 0 0 0 0 0 0 0 0;
+        0 0 0 0 0 0 0 1 1 0 0 0 1 0 0 0 0 0 0 1;
+        0 0 0 0 0 0 0 0 0 0 0 0 1 0 1 1 0 0 1 1;
+        0 1 1 0 0 0 0 0 0 0 0 0 0 0 1 1 0 1 1 1;
+        0 1 1 0 0 0 1 1 1 0 0 0 0 0 0 0 1 1 1 1;
+        0 0 0 0 0 0 1 1 1 0 0 1 1 0 0 0 1 1 1 1;
+        0 0 0 0 0 0 0 0 0 0 0 1 1 0 0 1 1 1 1 1;
+        0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1;
+        0 0 0 0 0 1 1 1 0 0 0 0 0 1 1 1 1 1 1 1;
+        0 0 0 0 0 1 1 0 0 0 0 0 1 1 1 1 1 1 1 1;
+        0 0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1 1
+    ];
+% gridMap = [
+%     1 1 1 1 1 1 1 1 1 0 1 0 1 0 0 0 0 0 0 0;
+%     1 1 1 1 1 1 1 1 0 0 0 0 1 1 0 1 1 0 0 0;
+%     1 1 1 1 1 1 1 0 0 0 1 0 0 0 0 0 0 0 0 0;
+%     1 1 1 1 1 1 1 0 0 0 0 0 0 1 1 0 0 0 1 0;
+%     1 1 1 1 1 0 0 1 1 0 0 1 1 1 0 1 0 0 0 0;
+%     1 1 1 1 0 1 1 0 0 0 1 0 0 0 0 0 0 1 0 0;
+%     1 1 1 0 0 1 0 0 1 0 1 1 0 0 0 0 0 0 0 1;
+%     1 1 0 0 1 0 0 0 0 1 1 0 0 0 1 0 0 1 0 0;
+%     1 0 0 0 0 0 1 0 0 1 0 0 1 0 0 0 0 0 0 0;
+%     0 0 0 0 0 0 0 0 1 0 0 1 0 1 0 0 0 0 0 0;
+%     0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 1;
+%     0 1 0 1 0 0 0 0 1 0 1 0 0 1 1 0 0 0 1 1;
+%     0 0 0 0 0 1 0 0 0 0 0 1 0 1 0 0 0 1 1 1;
+%     0 0 1 1 0 1 0 1 0 0 0 0 0 0 0 0 1 1 1 1;
+%     0 0 1 0 0 0 0 0 1 0 0 1 0 0 1 1 1 1 1 1;
+%     0 0 0 0 1 1 0 0 0 1 0 0 0 0 1 1 1 1 1 1;
+%     0 0 0 0 1 0 0 0 0 0 0 1 0 1 1 1 1 1 1 1;
+%     0 0 0 0 0 0 0 1 1 0 0 0 1 1 1 1 1 1 1 1;
+%     0 1 0 0 0 1 0 0 0 0 0 1 1 1 1 1 1 1 1 1;
+%     0 0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1 1
+% ];
 
 % gridMap = [
 %      1 1 0 0 0 1 1 1 0 0 1 1 0 0 0 0 0 0 1 1;
@@ -115,10 +145,12 @@ end
 % 1 = 严格禁止穿角（相邻两格任意一个是障碍就禁止对角）
 % 2 = 宽松禁止穿角（相邻两格都障碍才禁止对角）
 
-diagRule = 0;
-[Path, distanceX, OPEN_num, OPEN, run_time] = Astar(gridMap, start, goal, diagRule);
-%[Path, distanceX, OPEN_num, OPEN, run_time] = Astar_improved(gridMap, start, goal, diagRule);
-%[Path, distanceX, OPEN_num, OPEN, run_time] = Astar_improved_expand(gridMap, start, goal, diagRule);
+diagRule = 1;
+%[Path, distanceX, OPEN_num, OPEN, run_time] = Astar_improved_expand(gridMap, start, goal, 1);
+[Path, distanceX, OPEN_num, OPEN, run_time] = Astar_Conventional8(gridMap, start, goal, 0); %这里的0是diagRule = 0；
+%[Path, distanceX, OPEN_num, OPEN, run_time] = IAstar_FiveDir_Fallback(gridMap, start, goal, 1); % %这里的1是diagRule = 1；
+%[Path, distanceX, OPEN_num, OPEN, run_time] = IAstar_FiveDir_Fallback_Fast(gridMap, start, goal, 1); 
+
 %% -------------------- 5) Draw OPEN region (gray) --------------------
 % 论文出图一般建议只画 OPEN(flag==1)，更像“搜索区域”
 showOpenGray = true;   % true=画所有OPEN灰色；false=不画OPEN，只画路径 
@@ -136,6 +168,9 @@ if isempty(Path)
     return;
 end
 
+sampleStep = 0.05;
+[minObsDist, avgObsDist] = calc_path_obstacle_distance(Path, gridMap, sampleStep);
+
 % true=画节点编号，false不画 
 showIndex = false;
 if showIndex
@@ -148,11 +183,15 @@ end
 plot(Path(:,1)+.5, Path(:,2)+.5, 'b:', 'LineWidth', 2);
 %plot(Path(:,1)+.5, Path(:,2)+.5, 'b.', 'MarkerSize', 14);   %和showIndex控制节点
 
-xlabel(sprintf('Length: %.2f | OPEN nodes: %d | Time: %.2f ms | diagRule=%d', ...
-    distanceX, OPEN_num, run_time, diagRule), 'FontSize', 11, 'FontWeight', 'bold');
+xlabel(sprintf(['Length: %.2f | OPEN nodes: %d | Time: %.2f ms | ' ...
+    'MinDist: %.3f | AvgDist: %.3f | diagRule=%d'], ...
+    distanceX, OPEN_num, run_time, minObsDist, avgObsDist, diagRule), ...
+    'FontSize', 11, 'FontWeight', 'bold');
 
 fprintf('Length: %.2f | OPEN nodes: %d | Time: %.2f ms | diagRule=%d\n', ...
     distanceX, OPEN_num, run_time, diagRule);
+fprintf('最小障碍物距离: %.4f grid\n', minObsDist);
+fprintf('平均障碍物距离: %.4f grid\n', avgObsDist);
 %% ==================== helper functions ====================
 function p = pickPointOnGrid(promptStr, MaxRow, MaxCol)
     uiwait(msgbox(promptStr, '提示'), 2);

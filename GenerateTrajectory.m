@@ -1,13 +1,13 @@
 function [x,traj]=GenerateTrajectory(x,vt,ot,evaldt)
-% 轨迹生成函数
-% evaldt：前向模拟时间; vt、ot当前速度和角速度; 
+% Trajectory generation function.
+% evaldt is the forward simulation time; vt and ot are the sampled linear and angular velocities.
 global dt;
 time=0;
-u=[vt;ot];% 输入值
-traj=x;% 机器人轨迹
-while time<=evaldt % evaldt = 3   0:0.1:3  31次循环
-    time=time+dt;% 时间更新0.1 30 
-    x=f(x,u);% 运动更新  0.1s后的状态
-    traj=[traj x];% traj=3s内的所有状态轨迹； x=3s后的状态轨迹
+u=[vt;ot];% Control input.
+traj=x;% Predicted trajectory.
+while time<=evaldt % For evaldt = 3 and dt = 0.1, this produces 31 samples.
+    time=time+dt;% Advance time by one step.
+    x=f(x,u);% Motion update after one time step.
+    traj=[traj x];% Store all predicted states along the trajectory.
 end
 end

@@ -1,63 +1,63 @@
 function [evalDB,trajDB]=Evaluation(x,Vr,goal,ob,R,model,evalParam)
-%  Vr=[ 0.1s后最低速度 0.1s后最高速度 0.1s后最低角速度 0.1s后最高角速度 ]
-% model= [最高速度[m/s], 最高旋转速度[rad/s], 加速度[m/ss], 旋转加速度[rad/ss], 速度分辨率[m/s], 转速分辨率[rad/s]]
+% Vr = [min speed, max speed, min yaw rate, max yaw rate] after one time step.
+% model = [max speed, max yaw rate, acceleration, yaw acceleration, speed resolution, yaw-rate resolution].
 evalDB=[];
 trajDB=[];
-for vt=Vr(1):model(5):Vr(2) % 最低速度：速度分辨率：最高速度
-    for ot=Vr(3):model(6):Vr(4) % 最低角速度：转速分辨率：最高角速度
-        % 每组[vt ot]在3秒内的运动轨迹，取31个点 traj=3s内的所有状态轨迹，xt=3s后的状态轨迹 % evalParam(4) = predictDT = 3       
-        [xt,traj]=GenerateTrajectory(x,vt,ot,evalParam(4));   % [xt,traj] = [预测的当前状态，所有状态数组  ]
-        % 各评价函数的计算
-        heading=CalcHeadingEval(xt,goal); % 计算3s后的偏角与目标点的夹角
-        dist=CalcDistEval(xt,ob,R);       % 计算3s后的位置与障碍物最小距离（有最大值限制）
-        vel=abs(vt); % abs去绝对值           
-        stopDist=CalcBreakingDist(vel,model); % 制动距离的计算 (安全检查)
+for vt=Vr(1):model(5):Vr(2) % min speed : speed resolution : max speed
+    for ot=Vr(3):model(6):Vr(4) % min yaw rate : yaw-rate resolution : max yaw rate
+        % Predict the trajectory for each candidate control [vt, ot].
+        [xt,traj]=GenerateTrajectory(x,vt,ot,evalParam(4));   % Predicted terminal state and trajectory.
+        % Calculate evaluation terms.
+        heading=CalcHeadingEval(xt,goal); % Heading score at the predicted terminal state.
+        dist=CalcDistEval(xt,ob,R);       % Minimum obstacle distance score with saturation.
+        vel=abs(vt); % Use the absolute linear velocity.
+        stopDist=CalcBreakingDist(vel,model); % Braking distance for safety checking.
 
         if dist>stopDist % 
-            % 只有安全的轨迹才会被记录
-            evalDB=[evalDB;[vt ot heading dist vel]]; % 预测3s后得到的[速度 转速 角度分数 距离分数 速度分数]
-            trajDB=[trajDB;traj]; % trajDB = [3s内的所有状态轨迹 31个点 1-5行31列]
+            % Record only safe trajectories.
+            evalDB=[evalDB;[vt ot heading dist vel]]; % [speed, yaw rate, heading score, distance score, velocity score]
+            trajDB=[trajDB;traj]; % Store the full predicted trajectory.
         end
     end
 end
 end
 
 function stopDist=CalcBreakingDist(vel,model)  
-    % 根据运动学模型计算制动距离  
+    % Calculate braking distance from the kinematic model.
     global dt;  
     stopDist=0;  
     while vel>0  
         stopDist=stopDist+vel*dt; 
-        vel=vel-model(3)*dt; % model(3)为加速度
+        vel=vel-model(3)*dt; % model(3) is linear acceleration.
     end  
 end
 
 function dist=CalcDistEval(x,ob,R)  
-    % 障碍物距离评价函数：越远越好
+    % Obstacle distance evaluation: larger distance is better.
     dist=100;  
     for io=1:length(ob(:,1))  
         disttmp=norm(ob(io,:)-x(1:2)')-R;
-        if dist>disttmp% 找到离最近障碍物的距离  
+        if dist>disttmp% Keep the nearest obstacle distance.
             dist=disttmp;  
         end  
     end  
-    % 限制最大值，防止远处的障碍物权重过大
+    % Saturate the maximum value to avoid excessive weight for far obstacles.
     if dist>=R  
         dist=R;  
     end  
 end
 
 function heading=CalcHeadingEval(x,goal)  
-    % Heading评价函数：车头朝向目标越近越好
-    theta=toDegree(x(3));                                % 当前朝向  
-    goalTheta=toDegree(atan2(goal(2)-x(2),goal(1)-x(1)));% 目标点方位  
+    % Heading evaluation: better score when the heading points closer to the goal.
+    theta=toDegree(x(3));                                % Current heading.
+    goalTheta=toDegree(atan2(goal(2)-x(2),goal(1)-x(1)));% Bearing to the goal.
       
     if goalTheta>theta  
         targetTheta=goalTheta-theta; 
     else  
         targetTheta=theta-goalTheta;
     end  
-    heading=180-targetTheta; % 误差越小，分数越高
+    heading=180-targetTheta; % Smaller heading error gives a higher score.
 end
 
 function degree = toDegree(radian)    
